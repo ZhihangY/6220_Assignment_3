@@ -11,35 +11,13 @@ class DecisionNode:
         self.right = right
         self.decision_function = decision_function
         self.class_label = class_label
-
     def decide(self, feature):
         if self.class_label is not None:
             return self.class_label
-
         elif self.decision_function(feature):
             return self.left.decide(feature)
-
         else:
             return self.right.decide(feature)
-def build_decision_tree():
-
-    decision_tree_root = None
-    A1 = DecisionNode(None, None, lambda feature: feature[0]==1)
-    A3 = DecisionNode(None, None, lambda feature: feature[2]==1)
-    A3_prime = DecisionNode(None, None, lambda feature: feature[2]==1)
-    A4 = DecisionNode(None, None, lambda feature: feature[3]==1)
-    decision_tree_root = A1
-    decision_tree_root.left = DecisionNode(None, None, None, 1)
-    decision_tree_root.right = A4
-    A4.left = A3_prime
-    A4.right = A3
-    A3_prime.left = DecisionNode(None, None, None, 1)
-    A3_prime.right = DecisionNode(None, None, None, 0)
-    A3.left = DecisionNode(None, None, None, 0)
-    A3.right = DecisionNode(None, None, None, 1)
-    return decision_tree_root
-
-
 def gini_impurity(class_vector):
     true = 0
     false = 0
@@ -52,8 +30,6 @@ def gini_impurity(class_vector):
     false_prob = false/len(class_vector)
     gini_impurity_p = 1 - true_prob**2 - false_prob**2
     return gini_impurity_p
-
-
 def gini_gain(previous_classes, current_classes):
     total_length = sum(len(row) for row in current_classes)
     gini = 0
@@ -62,13 +38,10 @@ def gini_gain(previous_classes, current_classes):
         gini += (length/total_length) * gini_impurity(item)
     gini_gain = gini_impurity(previous_classes) - gini
     return gini_gain
-
-
 class DecisionTree:
     def __init__(self, depth_limit=float('inf')):
         self.root = None
         self.depth_limit = depth_limit
-
     def fit(self, features, classes):
         self.root = self.__build_tree__(features, classes)
 
@@ -78,7 +51,6 @@ class DecisionTree:
             return DecisionNode(None, None, None, class_label = 0)
         if len(counter) == 1:
             return DecisionNode(None, None, None, class_label = list(counter.keys())[0])
-
         if depth == self.depth_limit:
             if list(counter.values())[0] > list(counter.values())[1]:
                 return DecisionNode(None, None, None, class_label = 0)
@@ -105,15 +77,8 @@ class DecisionTree:
         right_node = self.__build_tree__(features_r,classes_r,depth = depth + 1)
         root = DecisionNode(left_node,right_node,lambda features:features[best_alpha] < mean[best_alpha])
         return root
-        # if depth == self.depth_limit and 
-        # root = None
-        # for i in range(len(features[0])):
-
-
     def classify(self, features):
         class_labels = []
-
-        # TODO: finish this.
         class_labels = [self.root.decide(example) for example in features]
         return class_labels
 class RandomForest:
@@ -165,12 +130,8 @@ class RandomForest:
             else:
                 class_labels.append(0)
         return class_labels, classes
-
-
-
 class ChallengeClassifier:
     def __init__(self):
-        # TODO: finish this.
         self.random_forest=RandomForest(20,8,0.7,0.7)
 
     def fit(self, features, classes):
